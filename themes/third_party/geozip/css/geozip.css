@@ -1,0 +1,10 @@
+.publish_geozip input {
+	margin-top:11px;
+	border-color:#8195a0;
+}
+.publish_geozip input.geozip-lookup-success {
+	border-color:#81c0a0;
+}
+.publish_geozip input.geozip-lookup-error {
+	border-color:#c18590;
+}
