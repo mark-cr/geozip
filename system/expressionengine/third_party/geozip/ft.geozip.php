@@ -110,11 +110,17 @@ class Geozip_ft extends EE_Fieldtype {
 			define('GEOZIP_INIT',TRUE);
 			$this->_include_theme_js('js/' . $this->info['shortname'] . '.js');
 			$this->_include_theme_css('css/' . $this->info['shortname'] . '.css');
-			$init_js = '<script>var geozip_helper = \'' . $this->_theme_url() . 'helpers/ziplocate.us.proxy.php\';</script>';
-		} else { $init_js = ''; }
+
+			$reqPrefix = ( $this->EE->config->item('site_index') != '' )? '/' . $this->EE->config->item('site_index'): '';
+			$apiPrefix = $reqPrefix . '/geozip-api/';
+			$script = '<script>var geozipApiPrefix = ' . json_encode($apiPrefix) . ';</script>';
+		}
+		else {
+			$script = '';
+		}
 
 		return <<<EOF
-{$init_js}<div class="{$this->info['shortname']}">
+{$script}<div class="{$this->info['shortname']}">
 	<input data-code type="text" name="{$name}[code]" value="{$obj->code}">
 	<input data-lat type="hidden" name="{$name}[lat]" value="{$obj->lat}">
 	<input data-lng type="hidden" name="{$name}[lng]" value="{$obj->lng}">
