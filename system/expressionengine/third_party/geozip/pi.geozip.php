@@ -13,10 +13,6 @@ $plugin_info = array(
 class Geozip
 {
 	var $return_data = '';
-	function Fmt()
-	{
-		Geozip::__construct();
-	}
 
 	function __construct()
 	{
