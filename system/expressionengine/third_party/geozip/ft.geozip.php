@@ -1,11 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once PATH_THIRD.'geozip/config.php';
+
 class Geozip_ft extends EE_Fieldtype {
 
 	var $info = array(
-		'name'		=> 'GeoZip',
-		'shortname' => 'geozip',
-		'version'	=> '1.0'
+		'name'      => GEOZIP_NAME,
+		'shortname' => GEOZIP_SHORT_NAME,
+		'version'   => GEOZIP_VERSION
 	);
 
 	function __construct()
