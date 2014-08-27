@@ -1,11 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once PATH_THIRD.'geozip/config.php';
+
 $plugin_info = array(
-	'pi_name'        => 'GeoZip Helper Plugin',
-	'pi_version'     => '1.0',
+	'pi_name'        => GEOZIP_NAME,
+	'pi_version'     => GEOZIP_VERSION,
 	'pi_author'      => 'Click Rain',
 	'pi_author_url'  => 'http://clickrain.com/',
-	'pi_description' => 'GeoZip - Locate things',
+	'pi_description' => GEOZIP_DESCRIPTION,
 	'pi_usage'       => Geozip::usage()
 	);
 
@@ -13,10 +15,6 @@ $plugin_info = array(
 class Geozip
 {
 	var $return_data = '';
-	function Fmt()
-	{
-		Geozip::__construct();
-	}
 
 	function __construct()
 	{

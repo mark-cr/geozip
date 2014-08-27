@@ -37,8 +37,13 @@ function fetchGeo(e) {
 		.removeClass('geozip-lookup-complete geozip-lookup-success geozip-lookup-error')
 		.addClass('geozip-lookup-in-progress');
 
+	// We *could* use /geozip-api/xxxxx, but not every ExpressionEngine
+	// installation has the index.php stripped, so default to the least common
+	// denominator.
+	var url = geozipApiPrefix + code;
+
 	// Do zip lookup.
-	$.getJSON(geozip_helper,{zip:code})
+	$.getJSON(url)
 		.fail(function(){
 			// On service failure, set error status and clear lat/lng.
 			$codeField.addClass('geozip-lookup-error');
