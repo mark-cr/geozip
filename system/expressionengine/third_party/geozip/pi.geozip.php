@@ -15,10 +15,13 @@ $plugin_info = array(
 class Geozip
 {
 	var $return_data = '';
+	var $debugMode   = FALSE;
 
 	function __construct()
 	{
 		$this->EE =& get_instance();
+
+		$this->debugMode = $this->EE->TMPL->fetch_param('debug');
 	}
 
 	/**
@@ -79,16 +82,26 @@ class Geozip
 		return TRUE;
 	}
 
+	private function _returnError($message)
+	{
+		// Log error messages.
+		$this->EE->TMPL->log_item($message);
+
+		// Return error message if debugMode is TRUE,
+		// fail silently otherwise.
+		return ( ! $this->debugMode )?: $message;
+	}
+
 	public function latlng($incLat = TRUE, $incLng = TRUE)
 	{
 		$zip = $this->EE->TMPL->fetch_param('zip');
 
 		if ( ! $zip ) {
-			return 'Error: No zip provided.';
+			$this->_returnError('Error: No zip provided.');
 		}
 
 		if ( ! $this->_validateZip($zip) ) {
-			return 'Error: Invalid zip.';
+			$this->_returnError('Error: Invalid zip.');
 		}
 
 		require_once $this->_theme_path() . 'helpers/ziplocate.us.lib.php';
@@ -105,7 +118,7 @@ class Geozip
 
 			return $output;
 		} else {
-			return 'Error: Lookup failure.';
+			$this->_returnError('Error: Lookup failure.');
 		}
 	}
 	public function lat() { return $this->latlng(TRUE,FALSE); }
@@ -119,7 +132,7 @@ class Geozip
 		// Check for a valid unit definition.
 		if ( ! in_array(strtolower($unit),$allowed_units) )
 		{
-			return 'Error: Bad unit.';
+			$this->_returnError('Error: Bad unit.');
 		}
 
 		// Retrieve granularity & convert.
@@ -132,7 +145,7 @@ class Geozip
 
 		// Check for coordinates.
 		if ( ! $coord1 || ! $coord2 ) {
-			return 'Error: To and From coordinates must be provided.';
+			$this->_returnError('Error: To and From coordinates must be provided.');
 		}
 
 		// Start parsing coordinates.
@@ -142,7 +155,7 @@ class Geozip
 		// Check for properly-formed coordinates.
 		if ( ! is_array($coord1) || ! is_array($coord2) || count($coord1) != 2 || count($coord2) != 2 )
 		{
-			return 'Error: Malformed coordinates.';
+			$this->_returnError('Error: Malformed coordinates.');
 		}
 
 		// Validate (well, force) coordinate data.
@@ -175,7 +188,11 @@ class Geozip
 		ob_start();
 ?>
 
-{exp:geozip:distance from='lat|lng' to='lat|lng' unit='mi'}
+{exp:geozip:distance}
+
+Calculate the distance between two geographic coordinates.
+
+Example: {exp:geozip:distance from='lat|lng' to='lat|lng' unit='mi'}
 
 Coordinates must be provided in the "lat|lng" format. (E.g. 43.534906906977|-96.691036267034)
 
@@ -185,6 +202,23 @@ Accepted units are:
 	km: Kilometers
 	ft: Feet
 	m:  Meters
+
+
+==================================================
+
+{exp:geozip:latlng}
+
+Return the geographic coordinates for a zip code.
+
+Example: {exp:geozip:latlng zip='57104'}
+
+"zip" must be a valid US ZIP code.
+
+==================================================
+
+Debugging
+
+Pass an optional "debug='1'" parameter to return messages upon error.
 
 <?php
 		$buffer = ob_get_contents();
