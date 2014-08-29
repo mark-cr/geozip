@@ -21,6 +21,9 @@ class Geozip
 	{
 		$this->EE =& get_instance();
 
+		$this->EE->load->add_package_path(PATH_THIRD.'geozip');
+		$this->EE->load->library('zip_lookup');
+
 		$this->debugMode = $this->EE->TMPL->fetch_param('debug');
 	}
 
@@ -104,9 +107,7 @@ class Geozip
 			$this->_returnError('Error: Invalid zip.');
 		}
 
-		require_once $this->_theme_path() . 'helpers/ziplocate.us.lib.php';
-
-		$geoData = json_decode(geoLookup($zip));
+		$geoData = json_decode($this->EE->zip_lookup->ziplocate_us($zip));
 
 		if ( $geoData->status == 'success' )
 		{
