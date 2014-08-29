@@ -101,4 +101,8 @@ jQuery(function(){
 		$(this).on('keyup',$.debounce(250,fetchGeo));
 	});
 
+	$('.geozip').on('click','.geozip-manual-override-toggle',function(e){
+		$(e.delegateTarget).toggleClass('override-visible');
+	});
+
 });

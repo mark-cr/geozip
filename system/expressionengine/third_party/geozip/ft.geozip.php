@@ -25,6 +25,44 @@ class Geozip_ft extends EE_Fieldtype {
 		}
 	}
 
+	public function install()
+	{
+		return array();
+	}
+
+	/**
+	 * Allow the Field Type to show up in a Grid.
+	 */
+	public function accepts_content_type($name)
+	{
+		return ($name == 'channel' || $name == 'grid');
+	}
+
+	/**
+	 * Settings
+	 */
+	public function display_settings($settings)
+	{
+		$overrideSetting = array(
+			'name'    => 'geozip_manual_override',
+			'id'      => 'geozip_manual_override',
+			'value'   => 'yes',
+			'checked' => ( isset($settings['geozip_manual_override']) && $settings['geozip_manual_override'] == 'yes' )?: FALSE,
+			);
+
+		$this->EE->table->add_row(
+			'Manual Override',
+			'<label>' . form_checkbox($overrideSetting) . '&nbsp; Show Manual Override</label>'
+		);
+	}
+
+	public function save_settings()
+	{
+		return array(
+			'geozip_manual_override' => $this->EE->input->post('geozip_manual_override')
+		);
+	}
+
 	function _extract_data($data) {
 		// Matrix gives us back $data as an array.
 		if ( is_array($data) ) {
@@ -42,14 +80,6 @@ class Geozip_ft extends EE_Fieldtype {
 		$data_out->lat = isset($datas[1]) ? $datas[1] : '';
 		$data_out->lng = isset($datas[2]) ? $datas[2] : '';
 		return $data_out;
-	}
-
-	/**
-	 * Allow the Field Type to show up in a Grid.
-	 */
-	public function accepts_content_type($name)
-	{
-		return ($name == 'channel' || $name == 'grid');
 	}
 
 	protected function _include_theme_js($file) {
@@ -104,7 +134,6 @@ class Geozip_ft extends EE_Fieldtype {
 	function _display($data, $name) {
 		$obj = $this->_extract_data($data);
 
-
 		if ( ! defined('GEOZIP_INIT') )
 		{
 			define('GEOZIP_INIT',TRUE);
@@ -119,11 +148,22 @@ class Geozip_ft extends EE_Fieldtype {
 			$script = '';
 		}
 
+		// Check to see if manual override is enabled
+		$overrideEnabledClass = ( isset($this->settings['geozip_manual_override']) && $this->settings['geozip_manual_override'] == 'yes' )? 'override-enabled': '';
+
 		return <<<EOF
-{$script}<div class="{$this->info['shortname']}">
-	<input data-code type="text" name="{$name}[code]" value="{$obj->code}">
-	<input data-lat type="hidden" name="{$name}[lat]" value="{$obj->lat}">
-	<input data-lng type="hidden" name="{$name}[lng]" value="{$obj->lng}">
+{$script}<div class="{$this->info['shortname']} {$overrideEnabledClass}">
+	<input data-code type="text" name="{$name}[code]" value="{$obj->code}"><i class="geozip-manual-override-toggle"></i>
+	<div class="geozip-manual-override">
+		<label>
+			<span class="title">Lat: </span>
+			<input data-lat type="text" name="{$name}[lat]" value="{$obj->lat}">
+		</label>
+		<label>
+			<span class="title">Lng: </span>
+			<input data-lng type="text" name="{$name}[lng]" value="{$obj->lng}">
+		</label>
+	</div>
 </div>
 EOF;
 	}
