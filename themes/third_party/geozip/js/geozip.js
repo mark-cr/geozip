@@ -87,9 +87,8 @@ function fetchGeo(e) {
 	return true;
 }
 
-jQuery(function(){
-
-	$('input[data-code]').each(function(i){
+function initializeGeozip($el){
+	$('input[data-code]',$el).each(function(i){
 		var fieldId = $(this).attr('name').split('[').shift().replace('field_id_',''),
 			code    = $(this).val(),
 			lat     = $('input[name="field_id_' + fieldId + '[lat]"]').val(),
@@ -101,8 +100,23 @@ jQuery(function(){
 		$(this).on('keyup',$.debounce(250,fetchGeo));
 	});
 
-	$('.geozip').on('click','.geozip-manual-override-toggle',function(e){
+	$el.on('click','.geozip-manual-override-toggle',function(e){
 		$(e.delegateTarget).toggleClass('override-visible');
 	});
+}
+
+jQuery(function(){
+
+	$('.publish_field .geozip').each(function(){
+		initializeGeozip($(this));
+	});
+
+	if ( typeof(window.Grid) !== 'undefined' ) {
+		Grid.bind('geozip', 'display', function(cell) {
+			// When Grid adds a new switch, initialize it.
+			var $geozip = $(cell).find('.geozip');
+			initializeGeozip($geozip);
+		});
+	}
 
 });

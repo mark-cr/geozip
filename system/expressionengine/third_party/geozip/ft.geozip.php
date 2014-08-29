@@ -50,17 +50,46 @@ class Geozip_ft extends EE_Fieldtype {
 			'checked' => ( isset($settings['geozip_manual_override']) && $settings['geozip_manual_override'] == 'yes' )?: FALSE,
 			);
 
-		$this->EE->table->add_row(
-			'Manual Override',
-			'<label>' . form_checkbox($overrideSetting) . '&nbsp; Show Manual Override</label>'
-		);
+		$customSettings = array(
+			array('Manual Override','<label>' . form_checkbox($overrideSetting) . '&nbsp; Show Manual Override</label>')
+			);
+
+		foreach ($customSettings as $s){
+			$this->EE->table->add_row($s[0],$s[1]);
+		}
 	}
 
-	public function save_settings()
+	public function grid_display_settings($settings)
+	{
+		$overrideSetting = array(
+			'name'    => 'geozip_manual_override',
+			'id'      => 'geozip_manual_override',
+			'value'   => 'yes',
+			'checked' => ( isset($settings['geozip_manual_override']) && $settings['geozip_manual_override'] == 'yes' )?: FALSE,
+			);
+
+		$customSettings = array(
+			$this->grid_settings_row(
+				'',
+				'<label>' . form_checkbox($overrideSetting) . '&nbsp; Show Manual Override</label>')
+			);
+
+		return $customSettings;
+	}
+
+	public function save_settings($data)
 	{
 		return array(
 			'geozip_manual_override' => $this->EE->input->post('geozip_manual_override')
 		);
+	}
+
+	public function grid_save_settings($data)
+	{
+		// So how would you describe the state of EE documentation?
+		return $data;
+
+		// Terrible. I'd describe it as terrible.
 	}
 
 	function _extract_data($data) {
@@ -126,12 +155,12 @@ class Geozip_ft extends EE_Fieldtype {
 		return $this->_display($data, $this->field_name);
 	}
 
-	function display_cell($data)
+	function grid_display_field($data)
 	{
-		return $this->_display($data, $this->cell_name);
+		return $this->_display($data, $this->field_name, 'grid');
 	}
 
-	function _display($data, $name) {
+	function _display($data, $name, $type = 'standard') {
 		$obj = $this->_extract_data($data);
 
 		if ( ! defined('GEOZIP_INIT') )

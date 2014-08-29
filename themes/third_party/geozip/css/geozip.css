@@ -1,31 +1,32 @@
-.publish_geozip .geozip {
+.publish_field .geozip {
 	overflow:auto;
 }
-
-.publish_geozip input {
+.publish_field .geozip input {
 	box-sizing:border-box;
 
 	float:left;
-	width:90%;
+	width:100%;
 	margin-top:11px;
 	margin-right:0;
+
 	border-color:#8195a0;
 	background-position:calc(100% - 4px) center;
 	background-repeat:no-repeat;
 }
-.publish_geozip input.geozip-lookup-success {
+.publish_grid .geozip input { margin-top:0; }
+.publish_field .geozip input.geozip-lookup-success {
 	border-color:#81c0a0;
 	background-image:url('../icons/check.png');
 }
-.publish_geozip input.geozip-lookup-error {
+.publish_field .geozip input.geozip-lookup-error {
 	border-color:#c18590;
 }
 
 
-.publish_geozip .geozip-manual-override-toggle {
+.publish_field .geozip .geozip-manual-override-toggle {
 	display:none;
 }
-.publish_geozip .override-enabled .geozip-manual-override-toggle {
+.publish_field .geozip.override-enabled .geozip-manual-override-toggle {
 	transition:opacity 0.2s;
 	display:block;
 	float:left;
@@ -39,25 +40,32 @@
 	cursor:pointer;
 	opacity:0.4;
 }
-.publish_geozip .override-enabled.override-visible .geozip-manual-override-toggle,
-.publish_geozip .override-enabled .geozip-manual-override-toggle:hover {
+.publish_field.publish_grid .geozip.override-enabled .geozip-manual-override-toggle {
+	margin-top:0;
+}
+.publish_field .geozip.override-enabled input { width:calc(100% - 32px); }
+.publish_field .geozip.override-enabled .geozip-manual-override-toggle:hover,
+.publish_field .geozip.override-enabled.override-visible .geozip-manual-override-toggle {
 	opacity:1;
 }
 
 
-.publish_geozip .geozip-manual-override {
+.publish_field .geozip .geozip-manual-override {
 	transition:max-height 0.2s;
 
 	clear:both;
 	overflow:hidden;
 	max-height:0;
 }
-.publish_geozip .geozip-manual-override label {
+.publish_field .geozip .geozip-manual-override label {
 	overflow:auto;
 	display:block;
 	margin-bottom:4px;
 }
-.publish_geozip .geozip-manual-override .title {
+.publish_field.publish_grid .geozip .geozip-manual-override label {
+	margin-top:4px;
+}
+.publish_field .geozip .geozip-manual-override .title {
 	display:block;
 	float:left;
 	width:24px;
@@ -66,10 +74,14 @@
 
 	line-height:26px;
 }
-.publish_geozip .geozip-manual-override input {
-	float:left;
-	width:50%;
+.publish_field.publish_grid .geozip .geozip-manual-override .title {
+	margin-top:0;
+	line-height:29px;
 }
-.publish_geozip .override-enabled.override-visible .geozip-manual-override {
+.publish_field .geozip .geozip-manual-override input {
+	float:left;
+	width:calc(100% - 64px);
+}
+.publish_field .geozip.override-enabled.override-visible .geozip-manual-override {
 	max-height:200px;
 }
