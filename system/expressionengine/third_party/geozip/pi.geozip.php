@@ -100,11 +100,11 @@ class Geozip
 		$zip = $this->EE->TMPL->fetch_param('zip');
 
 		if ( ! $zip ) {
-			$this->_returnError('Error: No zip provided.');
+			return $this->_returnError('Error: No zip provided.');
 		}
 
 		if ( ! $this->_validateZip($zip) ) {
-			$this->_returnError('Error: Invalid zip.');
+			return $this->_returnError('Error: Invalid zip.');
 		}
 
 		$geoData = json_decode($this->EE->zip_lookup->ziplocate_us($zip));
@@ -119,7 +119,7 @@ class Geozip
 
 			return $output;
 		} else {
-			$this->_returnError('Error: Lookup failure.');
+			return $this->_returnError('Error: Lookup failure.');
 		}
 	}
 	public function lat() { return $this->latlng(TRUE,FALSE); }
@@ -133,7 +133,7 @@ class Geozip
 		// Check for a valid unit definition.
 		if ( ! in_array(strtolower($unit),$allowed_units) )
 		{
-			$this->_returnError('Error: Bad unit.');
+			return $this->_returnError('Error: Bad unit.');
 		}
 
 		// Retrieve granularity & convert.
@@ -146,7 +146,7 @@ class Geozip
 
 		// Check for coordinates.
 		if ( ! $coord1 || ! $coord2 ) {
-			$this->_returnError('Error: To and From coordinates must be provided.');
+			return $this->_returnError('Error: To and From coordinates must be provided.');
 		}
 
 		// Start parsing coordinates.
@@ -156,7 +156,7 @@ class Geozip
 		// Check for properly-formed coordinates.
 		if ( ! is_array($coord1) || ! is_array($coord2) || count($coord1) != 2 || count($coord2) != 2 )
 		{
-			$this->_returnError('Error: Malformed coordinates.');
+			return $this->_returnError('Error: Malformed coordinates.');
 		}
 
 		// Validate (well, force) coordinate data.
