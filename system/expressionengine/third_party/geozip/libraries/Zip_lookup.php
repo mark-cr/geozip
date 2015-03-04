@@ -21,7 +21,7 @@ class Zip_lookup {
 		$stream_context = stream_context_create($stream_options);
 
 		try {
-			$fp = @fopen('http://ziplocate.us/api/v1/'.$zip, 'r', FALSE, $stream_context);
+			$fp = @fopen('https://api.zippopotam.us/us/'.$zip, 'r', FALSE, $stream_context);
 			if ( $fp ) {
 				$result = fread($fp, 2000);
 				fclose($fp);
@@ -36,11 +36,13 @@ class Zip_lookup {
 					{
 						throw new Exception('Unexpected result (not a JSON object).');
 					} else {
+						$places = $decoded_result->places;
+						$place = $places[0];
 						return json_encode(array(
 							'status' => 'success',
-							'zip'    => $decoded_result->zip,
-							'lat'    => $decoded_result->lat,
-							'lng'    => $decoded_result->lng
+							'zip'    => $decoded_result->{'post code'},
+							'lat'    => $place->latitude,
+							'lng'    => $place->longitude
 							));
 					}
 				}
